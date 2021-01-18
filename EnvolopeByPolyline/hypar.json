@@ -1,0 +1,53 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "id": "dbb609ee-8d6b-4fec-8b9c-55bc1eee6996",
+  "name": "Envolope by Polyline",
+  "description": "Generate a volume of a given width ",
+  "language": "C#",
+  "model_dependencies": [],
+  "model_output": "Envelope",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "Building Width": {
+        "description": "The width of the building",
+        "default": 18,
+        "type": "number",
+        "$hyparOrder": 2
+      },
+      "Building Axis": {
+        "description": "A planar continuous set of lines defining the general axis of the building",
+        "default": null,
+        "type": "object",
+        "$hyparOrder": 0,
+        "$ref": "https://hypar.io/Schemas/Geometry/Polyline.json"
+      },
+      "Building Height": {
+        "description": "The height of the building",
+        "default": 10,
+        "type": "number",
+        "$hyparOrder": 1
+      }
+    }
+  },
+  "outputs": [
+    {
+      "unit_type": "area",
+      "name": "Façade Area",
+      "description": "The surface of façade",
+      "type": "number"
+    },
+    {
+      "unit_type": "area",
+      "name": "Roof Area",
+      "description": "The roof surface",
+      "type": "number"
+    }
+  ],
+  "element_types": [
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/Envelope.json"
+  ],
+  "repository_url": "https://github.com/simonmoreau/HyparFunctions",
+  "source_file_key": null,
+  "preview_image": null
+}
