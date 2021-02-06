@@ -1,0 +1,70 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "id": "a25f9f70-53c7-4bed-a037-5648196db686",
+  "name": "LevelsFromEnvelope",
+  "description": "The LevelsFromEnvelope function.",
+  "language": "C#",
+  "model_dependencies": [
+    {
+      "autohide": true,
+      "name": "Envelope",
+      "optional": false
+    }
+  ],
+  "model_output": "Levels",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "Top Level Height": {
+        "multipleOf": 0.01,
+        "default": 50,
+        "maximum": 10,
+        "description": "Height of the penthouse level. ",
+        "type": "number",
+        "$hyparOrder": 1,
+        "minimum": 0
+      },
+      "Base Levels": {
+        "description": "Supply a list of level floor-to-floor heights. The last supplied value will be treated as the typical level height and repeated until the top level.",
+        "default": [
+          3,
+          3.5
+        ],
+        "type": "array",
+        "$hyparOrder": 0,
+        "items": {
+          "multipleOf": 0.01,
+          "default": 3,
+          "name": "Level",
+          "maximum": 10,
+          "description": "The height of the level",
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "outputs": [
+    {
+      "unit_type": "none",
+      "name": "Level Quantity",
+      "description": "Total number of volume",
+      "type": "number"
+    },
+    {
+      "unit_type": "area",
+      "name": "Total Level Area",
+      "description": "Total Level Area",
+      "type": "number"
+    }
+  ],
+  "element_types": [
+    "https://prod-api.hypar.io/schemas/Envelope",
+    "https://prod-api.hypar.io/schemas/Level",
+    "https://prod-api.hypar.io/schemas/LevelVolume",
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/LevelPerimeter.json"
+  ],
+  "repository_url": "https://github.com/hypar-io/function",
+  "source_file_key": null,
+  "preview_image": null
+}
