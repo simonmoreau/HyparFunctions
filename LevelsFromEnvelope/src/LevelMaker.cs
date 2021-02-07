@@ -19,31 +19,41 @@ namespace LevelsFromEnvelope
             GradeLevels(stdHeight, grdHeight);
             HighLevels(stdHeight, pntHeight);
             MidLevels(stdHeight);
-
-                        Material = BuiltInMaterials.Glass;
-            Material.SpecularFactor = 0.0;
-            Material.GlossinessFactor = 0.0;
-
         }
 
-        public LevelMaker(List<Envelope> envelopes)
+        public LevelMaker(List<Envelope> envelopes, IList<double> baseLevels, double topLevelHeight, string prefix = "")
         {
             Envelopes = new List<Envelope>();
             Envelopes.AddRange(envelopes.OrderBy(e => e.Elevation));
             Levels = new List<Level>();
             LevelPerimeters = new List<LevelPerimeter>();
+            double stdHeight = baseLevels.Last();
 
-            Material = BuiltInMaterials.Glass;
-            Material.SpecularFactor = 0.0;
-            Material.GlossinessFactor = 0.0;
+            SubGradeLevels(stdHeight);
+            GradeLevels(baseLevels);
+            HighLevels(stdHeight, topLevelHeight);
+            MidLevels(stdHeight);
+
+            NameLevels(prefix);
         }
 
         private List<Envelope> Envelopes { get; set; }
-        private Material Material { get; set; }
         public List<Level> Levels { get; private set; }
         public List<LevelPerimeter> LevelPerimeters { get; private set; }
 
+        /// <summary>
+        /// Name each level based on its elevation
+        /// </summary>
+        /// <param name="prefix">The prefix to be added before the level number.</param>
+        private void NameLevels(string prefix)
+        {
+            int i = 0;
 
+            foreach (Level level in Levels)
+            {
+                level.Name = prefix + " " + i.ToString();
+            }
+        }
 
         /// <summary>
         /// Creates Levels within the subgrade and ongrade Envelopes.
@@ -70,6 +80,50 @@ namespace LevelsFromEnvelope
                                         Vector3.ZAxis, 0.0, new Transform(0.0, 0.0, grdHeight), null, null,
                                         false, Guid.NewGuid(), "");
                 MakeLevels(envelope, stdHeight, true, true);
+            }
+            else
+            {
+                MakeLevel(envelope, envelope.Height);
+            }
+            Levels = Levels.OrderBy(l => l.Elevation).ToList();
+            LevelPerimeters = LevelPerimeters.OrderBy(l => l.Elevation).ToList();
+        }
+
+        /// <summary>
+        /// Creates Levels within the subgrade and ongrade Envelopes.
+        /// </summary>
+        /// <param name="stdHeights">The list of desired height for repeating Levels.</param>
+        private void GradeLevels(IList<double> stdHeights)
+        {
+            var envelopes = Envelopes.Where(e => e.Elevation >= 0.0).ToList();
+            if (envelopes.Count() == 0)
+            {
+                return;
+            }
+            var envelope = envelopes.First();
+            var subs = Envelopes.Where(e => e.Elevation < 0.0).ToList();
+            if (subs.Count() == 0) // if no subgrade levels created, add the first Level.
+            {
+                MakeLevel(envelope, envelope.Elevation);
+            }
+            double elevation = 0;
+
+            // Populate explicity defined levels
+            foreach (double height in stdHeights)
+            {
+                elevation = elevation + height;
+                MakeLevel(envelope, elevation);
+            }
+
+            // Populate the rest of the levels
+
+            if (envelope.Height >= elevation)
+            {
+                // Temporary Envelope to populate levels above the lobby.
+                envelope = new Envelope(envelope.Profile, elevation, envelope.Height - elevation,
+                                        Vector3.ZAxis, 0.0, new Transform(0.0, 0.0, elevation), null, null,
+                                        false, Guid.NewGuid(), "");
+                MakeLevels(envelope, stdHeights.Last(), false, true);
             }
             else
             {
@@ -164,7 +218,7 @@ namespace LevelsFromEnvelope
                 return false;
             }
 
-            Levels.Add(new Level(elevation, new Transform(0.0, 0.0, 0), Material, null, false, Guid.NewGuid(), name));
+            Levels.Add(new Level(elevation, new Transform(0.0, 0.0, 0), null, null, false, Guid.NewGuid(), name));
             LevelPerimeters.Add(new LevelPerimeter(perimeter.Area(), elevation, perimeter, Guid.NewGuid(), ""));
             Levels = Levels.OrderBy(l => l.Elevation).ToList();
             LevelPerimeters = LevelPerimeters.OrderBy(l => l.Elevation).ToList();
@@ -186,7 +240,7 @@ namespace LevelsFromEnvelope
             }
             if (first)
             {
-                Levels.Add(new Level(envelope.Elevation, new Transform(0.0, 0.0, 0), Material, null, false, Guid.NewGuid(), ""));
+                Levels.Add(new Level(envelope.Elevation, new Transform(0.0, 0.0, 0), null, null, false, Guid.NewGuid(), ""));
                 LevelPerimeters.Add(new LevelPerimeter(perimeter.Area(), envelope.Elevation, perimeter, Guid.NewGuid(), ""));
             };
             var openHeight = envelope.Height;
@@ -194,14 +248,14 @@ namespace LevelsFromEnvelope
             var atHeight = envelope.Elevation + stdHeight;
             while (openHeight >= stdHeight * 2)
             {
-                Levels.Add(new Level(atHeight, new Transform(0.0, 0.0, 0), Material, null, false, Guid.NewGuid(), ""));
+                Levels.Add(new Level(atHeight, new Transform(0.0, 0.0, 0), null, null, false, Guid.NewGuid(), ""));
                 LevelPerimeters.Add(new LevelPerimeter(perimeter.Area(), atHeight, perimeter, Guid.NewGuid(), ""));
                 openHeight -= stdHeight;
                 atHeight += stdHeight;
             }
             if (last)
             {
-                Levels.Add(new Level(envelope.Elevation + envelope.Height, new Transform(0.0, 0.0, 0), Material, null, false, Guid.NewGuid(), ""));
+                Levels.Add(new Level(envelope.Elevation + envelope.Height, new Transform(0.0, 0.0, 0), null, null, false, Guid.NewGuid(), ""));
                 LevelPerimeters.Add(new LevelPerimeter(perimeter.Area(), envelope.Elevation + envelope.Height, perimeter, Guid.NewGuid(), ""));
             }
         }

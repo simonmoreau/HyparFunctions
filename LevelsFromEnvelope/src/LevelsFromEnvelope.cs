@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace LevelsFromEnvelope
 {
-      public static class LevelsFromEnvelope
+    public static class LevelsFromEnvelope
     {
         /// <summary>
         /// The LevelsFromEnvelope function.
@@ -23,15 +23,8 @@ namespace LevelsFromEnvelope
                 throw new ArgumentException("No Envelope found.");
             }
             envelopes.AddRange(model.AllElementsOfType<Envelope>());
-            var levelMaker = new LevelMaker(envelopes);
-            
-            // All the base levels
-            var envolope = envelopes.First();
-            int i = 0;
-            foreach (double elevation in input.BaseLevels)
-            {
-                levelMaker.MakeLevel(envolope,elevation, $"Level {i.ToString()}");
-            }
+            var levelMaker = new LevelMaker(envelopes, input.BaseLevels, input.TopLevelHeight, "Level");
+
             var levelArea = 0.0;
             foreach (var lp in levelMaker.LevelPerimeters)
             {
@@ -42,7 +35,7 @@ namespace LevelsFromEnvelope
             output.Model.AddElements(levelMaker.Levels);
             output.Model.AddElements(levelMaker.LevelPerimeters);
 
-                        var matl = BuiltInMaterials.Glass;
+            var matl = BuiltInMaterials.Glass;
             matl.SpecularFactor = 0.0;
             matl.GlossinessFactor = 0.0;
             foreach (var item in levelMaker.LevelPerimeters)
@@ -50,8 +43,8 @@ namespace LevelsFromEnvelope
                 output.Model.AddElement(new Panel(item.Perimeter, matl, new Transform(0.0, 0.0, item.Elevation),
                                         null, false, Guid.NewGuid(), ""));
             }
-            
+
             return output;
         }
-      }
+    }
 }
