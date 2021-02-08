@@ -49,7 +49,7 @@ namespace LevelsFromEnvelope
         /// <summary>Height of the penthouse level. </summary>
         [Newtonsoft.Json.JsonProperty("Top Level Height", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0D, 10D)]
-        public double TopLevelHeight { get; set; } = 50D;
+        public double TopLevelHeight { get; set; } = 3.5D;
     
         /// <summary>Supply a list of level floor-to-floor heights. The last supplied value will be treated as the typical level height and repeated until the top level.</summary>
         [Newtonsoft.Json.JsonProperty("Base Levels", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]

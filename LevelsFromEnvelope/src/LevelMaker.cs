@@ -52,6 +52,7 @@ namespace LevelsFromEnvelope
             foreach (Level level in Levels)
             {
                 level.Name = prefix + " " + i.ToString();
+                i++;
             }
         }
 
@@ -119,7 +120,7 @@ namespace LevelsFromEnvelope
 
             if (envelope.Height >= elevation)
             {
-                // Temporary Envelope to populate levels above the lobby.
+                // Temporary Envelope to populate levels above the explicity defined levels.
                 envelope = new Envelope(envelope.Profile, elevation, envelope.Height - elevation,
                                         Vector3.ZAxis, 0.0, new Transform(0.0, 0.0, elevation), null, null,
                                         false, Guid.NewGuid(), "");
