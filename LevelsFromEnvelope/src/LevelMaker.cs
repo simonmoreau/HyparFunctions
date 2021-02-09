@@ -31,10 +31,13 @@ namespace LevelsFromEnvelope
 
             SubGradeLevels(stdHeight);
             GradeLevels(baseLevels);
+
+            NameLevels(prefix);
+            
             HighLevels(stdHeight, topLevelHeight);
             MidLevels(stdHeight);
 
-            NameLevels(prefix);
+            
         }
 
         private List<Envelope> Envelopes { get; set; }
@@ -245,7 +248,7 @@ namespace LevelsFromEnvelope
                 LevelPerimeters.Add(new LevelPerimeter(perimeter.Area(), envelope.Elevation, perimeter, Guid.NewGuid(), ""));
             };
             var openHeight = envelope.Height;
-            var stdHeight = Math.Abs(openHeight / Math.Floor(openHeight / interval));
+            var stdHeight = interval; // Math.Abs(openHeight / Math.Floor(openHeight / interval));
             var atHeight = envelope.Elevation + stdHeight;
             while (openHeight >= stdHeight * 2)
             {

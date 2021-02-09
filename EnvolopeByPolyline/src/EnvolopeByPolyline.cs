@@ -19,6 +19,11 @@ namespace EnvolopeByPolyline
         {
             Polyline polyline = input.BuildingAxis;
 
+            if (polyline == null)
+            {
+                throw new ArgumentException("Please draw the axe of the building.");
+            }
+
             Polygon perimeter = input.BuildingAxis.Offset(input.BuildingWidth / 2, EndType.Butt).First();
 
             var envMatl = new Material("envelope", new Color(0.3, 0.7, 0.7, 0.6), 0.0f, 0.0f);
