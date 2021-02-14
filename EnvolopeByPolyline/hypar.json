@@ -1,7 +1,7 @@
 {
   "$schema": "https://hypar.io/Schemas/Function.json",
   "id": "dbb609ee-8d6b-4fec-8b9c-55bc1eee6996",
-  "name": "Envolope by Polyline",
+  "name": "Envelope by Polyline",
   "description": "Generate a volume of a given width ",
   "language": "C#",
   "model_dependencies": [],
