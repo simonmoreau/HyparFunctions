@@ -23,7 +23,7 @@ namespace LevelsFromEnvelope
                 throw new ArgumentException("No Envelope found.");
             }
             envelopes.AddRange(model.AllElementsOfType<Envelope>());
-            var levelMaker = new LevelMaker(envelopes, input.BaseLevels, input.TopLevelHeight, "Level");
+            var levelMaker = new LevelMaker(envelopes, input.BaseLevels, "Level");
 
             var levelArea = 0.0;
             foreach (var lp in levelMaker.LevelPerimeters)

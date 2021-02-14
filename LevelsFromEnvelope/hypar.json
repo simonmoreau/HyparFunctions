@@ -1,8 +1,8 @@
 {
   "$schema": "https://hypar.io/Schemas/Function.json",
   "id": "a25f9f70-53c7-4bed-a037-5648196db686",
-  "name": "LevelsFromEnvelope",
-  "description": "The LevelsFromEnvelope function.",
+  "name": "Levels From Envelopes",
+  "description": "Create levels in every envelopes in the project.",
   "language": "C#",
   "model_dependencies": [
     {
@@ -15,15 +15,6 @@
   "input_schema": {
     "type": "object",
     "properties": {
-      "Top Level Height": {
-        "multipleOf": 0.01,
-        "default": 3.5,
-        "maximum": 10,
-        "description": "Height of the penthouse level. ",
-        "type": "number",
-        "$hyparOrder": 1,
-        "minimum": 0
-      },
       "Base Levels": {
         "description": "Supply a list of level floor-to-floor heights. The last supplied value will be treated as the typical level height and repeated until the top level.",
         "default": [
@@ -64,7 +55,7 @@
     "https://prod-api.hypar.io/schemas/LevelVolume",
     "https://raw.githubusercontent.com/hypar-io/Schemas/master/LevelPerimeter.json"
   ],
-  "repository_url": "https://github.com/hypar-io/function",
+  "repository_url": "https://github.com/simonmoreau/HyparFunctions",
   "source_file_key": null,
   "preview_image": null
 }

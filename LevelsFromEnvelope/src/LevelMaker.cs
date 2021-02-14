@@ -21,7 +21,7 @@ namespace LevelsFromEnvelope
             MidLevels(stdHeight);
         }
 
-        public LevelMaker(List<Envelope> envelopes, IList<double> baseLevels, double topLevelHeight, string prefix = "")
+        public LevelMaker(List<Envelope> envelopes, IList<double> baseLevels, string prefix = "")
         {
             Envelopes = new List<Envelope>();
             Envelopes.AddRange(envelopes.OrderBy(e => e.Elevation));
@@ -34,7 +34,7 @@ namespace LevelsFromEnvelope
 
             NameLevels(prefix);
             
-            HighLevels(stdHeight, topLevelHeight);
+            HighLevels(stdHeight, stdHeight);
             MidLevels(stdHeight);
 
             

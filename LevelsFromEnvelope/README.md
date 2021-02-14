@@ -1,12 +1,11 @@
 
 
-# LevelsFromEnvelope
+# Levels From Envelopes
 
-The LevelsFromEnvelope function.
+Create levels in every envelopes in the project.
 
 |Input Name|Type|Description|
 |---|---|---|
-|Top Level Height|number|Height of the penthouse level. |
 |Base Levels|array|Supply a list of level floor-to-floor heights. The last supplied value will be treated as the typical level height and repeated until the top level.|
 
 
