@@ -1,0 +1,49 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "id": "b6162ce9-c39f-403e-8ad1-d3c8ac29c7ce",
+  "name": "Staircase From Line",
+  "description": "Create a staircase of a given width aligned along a line",
+  "language": "C#",
+  "model_dependencies": [
+    {
+      "autohide": false,
+      "name": "Levels",
+      "optional": false
+    }
+  ],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "Width": {
+        "description": "The width of the stair in French \"Unités de passage\"",
+        "default": 2,
+        "type": "number",
+        "$hyparOrder": 1
+      },
+      "Staircase axe": {
+        "description": "A line to orient your staircase",
+        "default": null,
+        "type": "object",
+        "$hyparOrder": 0,
+        "$ref": "https://hypar.io/Schemas/Geometry/Line.json"
+      }
+    }
+  },
+  "outputs": [
+    {
+      "unit_type": "none",
+      "name": "Number of flight",
+      "description": "The number of stair flights",
+      "type": "number"
+    }
+  ],
+  "element_types": [
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/LevelPerimeter.json",
+    "https://prod-api.hypar.io/schemas/Level",
+    "https://prod-api.hypar.io/schemas/LevelVolume",
+    "https://prod-api.hypar.io/schemas/ServiceCore"
+  ],
+  "repository_url": "https://github.com/simonmoreau/HyparFunctions",
+  "source_file_key": null,
+  "preview_image": null
+}
