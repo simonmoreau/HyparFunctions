@@ -16,6 +16,11 @@ namespace StaircaseFromLine
         /// <returns>A StaircaseFromLineOutputs instance containing computed results and the model with any new elements.</returns>
         public static StaircaseFromLineOutputs Execute(Dictionary<string, Model> inputModels, StaircaseFromLineInputs input)
         {
+            if (input.StaircaseAxe == null)
+            {
+                throw new ArgumentException("Please draw the axe of the staircase.");
+            }
+
             var levels = new List<Level>();
             inputModels.TryGetValue("Levels", out var model);
             if (model == null || model.AllElementsOfType<Level>().Count() == 0)
@@ -41,27 +46,26 @@ namespace StaircaseFromLine
                 throw new ArgumentException("Can't create a stair with no width.");
             }
 
-            double flightWidth = 0;
+            double runWidth = 0;
             double thread = 0.3;
             double maxRiser = 0.14;
             double levelHeight = 3.5;
 
-            if (uniteDePassage == 1) { flightWidth = 0.9; }
-            else if (uniteDePassage == 2) { flightWidth = 1.4; }
-            else { flightWidth = 0.6 * uniteDePassage; }
+            if (uniteDePassage == 1) { runWidth = 0.9; }
+            else if (uniteDePassage == 2) { runWidth = 1.4; }
+            else { runWidth = 0.6 * uniteDePassage; }
 
 
             double wallWidth = 0.2;
             double landingWidth = 2.5;
-            double realLandingWidth = Math.Max(landingWidth, flightWidth);
-            double flightLengh = Math.Ceiling(Math.Ceiling(levelHeight / maxRiser) / 2) * thread;
-            double totalLenght = wallWidth * 2 + flightWidth + realLandingWidth + flightLengh;
-            double totalWidth = wallWidth * 2 + flightWidth + wallWidth;
+            double realLandingWidth = Math.Max(landingWidth, runWidth);
+            double runLengh = Math.Ceiling(Math.Ceiling(levelHeight / maxRiser) / 2) * thread;
+            double totalLenght = wallWidth * 2 + runWidth + realLandingWidth + runLengh;
+            double totalWidth = wallWidth * 2 + runWidth + wallWidth;
 
-            Vector3 max = stairCaseAxe.Start + stairCaseAxe.Direction()*totalLenght + Vector3.ZAxis.Cross(stairCaseAxe.Direction())*totalWidth;
-            Polygon staircaseFoorprint = Polygon.Rectangle(stairCaseAxe.Start,max);
-            
-            
+            Vector3 max = stairCaseAxe.Start + stairCaseAxe.Direction() * totalLenght + Vector3.ZAxis.Cross(stairCaseAxe.Direction()) * totalWidth;
+            Polygon staircaseFoorprint = Polygon.Rectangle(stairCaseAxe.Start, max);
+
             var coreMatl = new Material("envelope", new Color(0.3, 0.7, 0.7, 0.6), 0.0f, 0.0f);
             var serviceCores = new List<ServiceCore>();
 
@@ -69,7 +73,7 @@ namespace StaircaseFromLine
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>() { extrude });
             serviceCores.Add(new ServiceCore(staircaseFoorprint, 0.0, levels.Last().Elevation, staircaseFoorprint.Centroid(),
                           new Transform(), coreMatl, geomRep, false, Guid.NewGuid(), ""));
-            
+
 
             var output = new StaircaseFromLineOutputs(2);
 
