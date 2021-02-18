@@ -8,8 +8,11 @@ namespace StaircaseFromLine
 {
     public class StairMaker
     {
+        public List<Stair> Stairs { get; private set; }
+
         public StairMaker(double maximumRiserHeight, double threadDepth, double runWidth)
         {
+
 
         }
     }

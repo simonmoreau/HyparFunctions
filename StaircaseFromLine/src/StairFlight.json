@@ -8,7 +8,7 @@
     "required": [],
     "properties": {
         "StructuralDepth": {
-            "description": "Minimum depth between stait tread/riser and the underside of the stair run.",
+            "description": "Minimum depth between stait tread/riser and the underside of the stair flight.",
             "type": "number"
         },
         "RiserNumber": {
@@ -20,19 +20,19 @@
             "type": "number"
         },
         "MaximumRiserHeight": {
-            "description": "The height that risers will not exceed when the stair run is created.",
+            "description": "The height that risers will not exceed when the stair flight is created.",
             "type": "number"
         },
         "Height": {
-            "description": "The height of the run. ",
+            "description": "The height of the flight. ",
             "type": "number"
         }
     },
     "additionalProperties": false,
-    "description": "Represents a stair run.",
-    "$id": "StairRun",
+    "description": "Represents a stair flight.",
+    "$id": "StairFlight",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "discriminator": "discriminator",
     "type": "object",
-    "title": "Stair Run"
+    "title": "Stair Flight"
 }

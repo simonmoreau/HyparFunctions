@@ -7,10 +7,6 @@
     ],
     "required": [],
     "properties": {
-        "FlightNumber": {
-            "description": "The number of run in the stair.",
-            "type": "number"
-        },
         "RiserNumber": {
             "description": "The number of riser is calculated based on the height between levels.",
             "type": "number"
@@ -26,6 +22,10 @@
         "Height": {
             "description": "The height of the stair. ",
             "type": "number"
+        },
+        "StairPath": {
+            "description": "The planar projection of the stair path",
+            "$ref": "https://hypar.io/Schemas/Geometry/Polyline.json"
         }
     },
     "additionalProperties": false,

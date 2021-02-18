@@ -32,7 +32,7 @@ namespace StaircaseFromLine
 
             levels = levels.OrderBy(l => l.Elevation).ToList();
 
-
+            
 
             //Build a polygon aligned with the line
             Line stairCaseAxe = input.StaircaseAxe;
