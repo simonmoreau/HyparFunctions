@@ -41,9 +41,9 @@
     "https://raw.githubusercontent.com/hypar-io/Schemas/master/LevelPerimeter.json",
     "https://prod-api.hypar.io/schemas/Level",
     "https://prod-api.hypar.io/schemas/LevelVolume",
-    "https://prod-api.hypar.io/schemas/ServiceCore",
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/StairEnclosure.json",
     "https://raw.githubusercontent.com/simonmoreau/HyparFunctions/main/StaircaseFromLine/src/Stair.json",
-    "https://raw.githubusercontent.com/simonmoreau/HyparFunctions/main/StaircaseFromLine/src/StairRun.json"
+    "https://raw.githubusercontent.com/simonmoreau/HyparFunctions/main/StaircaseFromLine/src/StairFlight.json"
   ],
   "repository_url": "https://github.com/simonmoreau/HyparFunctions",
   "source_file_key": null,

@@ -19,16 +19,16 @@ namespace Elements
 {
     #pragma warning disable // Disable all warnings
 
-    /// <summary>Represents a stair run.</summary>
+    /// <summary>Represents a stair flight.</summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class StairRun : GeometricElement
+    public partial class StairFlight : GeometricElement
     {
         [Newtonsoft.Json.JsonConstructor]
-        public StairRun(double @structuralDepth, double @riserNumber, double @riserHeight, double @maximumRiserHeight, double @height, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
+        public StairFlight(double @structuralDepth, double @riserNumber, double @riserHeight, double @maximumRiserHeight, double @height, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
             : base(transform, material, representation, isElementDefinition, id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<StairRun>();
+            var validator = Validator.Instance.GetFirstValidatorForType<StairFlight>();
             if(validator != null)
             {
                 validator.PreConstruct(new object[]{ @structuralDepth, @riserNumber, @riserHeight, @maximumRiserHeight, @height, @transform, @material, @representation, @isElementDefinition, @id, @name});
@@ -46,7 +46,7 @@ namespace Elements
             }
         }
     
-        /// <summary>Minimum depth between stait tread/riser and the underside of the stair run.</summary>
+        /// <summary>Minimum depth between stait tread/riser and the underside of the stair flight.</summary>
         [Newtonsoft.Json.JsonProperty("StructuralDepth", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double StructuralDepth { get; set; }
     
@@ -58,11 +58,11 @@ namespace Elements
         [Newtonsoft.Json.JsonProperty("RiserHeight", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double RiserHeight { get; set; }
     
-        /// <summary>The height that risers will not exceed when the stair run is created.</summary>
+        /// <summary>The height that risers will not exceed when the stair flight is created.</summary>
         [Newtonsoft.Json.JsonProperty("MaximumRiserHeight", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double MaximumRiserHeight { get; set; }
     
-        /// <summary>The height of the run. </summary>
+        /// <summary>The height of the flight. </summary>
         [Newtonsoft.Json.JsonProperty("Height", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Height { get; set; }
     

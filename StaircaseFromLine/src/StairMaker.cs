@@ -10,10 +10,51 @@ namespace StaircaseFromLine
     {
         public List<Stair> Stairs { get; private set; }
 
-        public StairMaker(double maximumRiserHeight, double threadDepth, double runWidth)
+        public StairMaker(double maximumRiserHeight, double threadDepth, double runWidth, Polyline stairPath, double stairHeight)
         {
 
+            // Calculate actual stair dimensions
+            int riserNumber = Convert.ToInt32(Math.Ceiling(stairHeight / maximumRiserHeight));
+            double actualRiserHeigh = stairHeight / riserNumber;
 
+            // Create a flight of step for every line in the path
+            int lenght = stairPath.Vertices.Count - 1;
+            for (int i = 0; i < lenght; i++)
+            {
+                Line flightLine = new Line(stairPath.Vertices[i], stairPath.Vertices[i + 1]);
+
+            }
+
+
+        }
+
+        private void StairFlightMaker(Line flightLine, double threadDepth, double actualRiserHeigh, double runWidth)
+        {
+            // Number of thread in the flight
+            int threadNumber = Convert.ToInt32(Math.Ceiling(flightLine.Length() / threadDepth));
+            List<Vector3> profileVertices = new List<Vector3>();
+
+            Vector3 riserVector = Vector3.ZAxis * actualRiserHeigh;
+            Vector3 threadVector = Vector3.XAxis * threadDepth;
+
+            // Add first point
+            profileVertices.Add(new Vector3());
+
+            for (int i = 0; i < threadNumber; i++)
+            {
+                profileVertices.Add(profileVertices[i * 2] + riserVector);
+                profileVertices.Add(profileVertices[i * 2] + riserVector + threadVector);
+            }
+
+            Polygon profile = new Polygon(profileVertices);
+
+            var extrude1 = new Elements.Geometry.Solids.Extrude(profile, runWidth / 2, Vector3.YAxis, false);
+            var extrude2 = new Elements.Geometry.Solids.Extrude(profile, runWidth / 2, Vector3.YAxis, false);
+            var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>() { extrude1, extrude2 });
+            var coreMatl = new Material("envelope", new Color(0.3, 0.7, 0.7, 0.6), 0.0f, 0.0f);
+
+            Stairs.Add(new Stair(0, actualRiserHeigh, actualRiserHeigh, 0, profile,
+            new Transform(), coreMatl, geomRep, false, Guid.NewGuid(), ""));
         }
     }
 }

@@ -25,30 +25,26 @@ namespace Elements
     public partial class Stair : GeometricElement
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Stair(double @flightNumber, double @riserNumber, double @riserHeight, double @maximumRiserHeight, double @height, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
+        public Stair(double @riserNumber, double @riserHeight, double @maximumRiserHeight, double @height, Polyline @stairPath, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
             : base(transform, material, representation, isElementDefinition, id, name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Stair>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @flightNumber, @riserNumber, @riserHeight, @maximumRiserHeight, @height, @transform, @material, @representation, @isElementDefinition, @id, @name});
+                validator.PreConstruct(new object[]{ @riserNumber, @riserHeight, @maximumRiserHeight, @height, @stairPath, @transform, @material, @representation, @isElementDefinition, @id, @name});
             }
         
-            this.FlightNumber = @flightNumber;
             this.RiserNumber = @riserNumber;
             this.RiserHeight = @riserHeight;
             this.MaximumRiserHeight = @maximumRiserHeight;
             this.Height = @height;
+            this.StairPath = @stairPath;
             
             if(validator != null)
             {
                 validator.PostConstruct(this);
             }
         }
-    
-        /// <summary>The number of run in the stair.</summary>
-        [Newtonsoft.Json.JsonProperty("FlightNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double FlightNumber { get; set; }
     
         /// <summary>The number of riser is calculated based on the height between levels.</summary>
         [Newtonsoft.Json.JsonProperty("RiserNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -65,6 +61,10 @@ namespace Elements
         /// <summary>The height of the stair. </summary>
         [Newtonsoft.Json.JsonProperty("Height", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Height { get; set; }
+    
+        /// <summary>The planar projection of the stair path</summary>
+        [Newtonsoft.Json.JsonProperty("StairPath", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Polyline StairPath { get; set; }
     
     
     }

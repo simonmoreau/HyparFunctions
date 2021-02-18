@@ -32,7 +32,7 @@ namespace StaircaseFromLine
 
             levels = levels.OrderBy(l => l.Elevation).ToList();
 
-            
+
 
             //Build a polygon aligned with the line
             Line stairCaseAxe = input.StaircaseAxe;
@@ -67,19 +67,24 @@ namespace StaircaseFromLine
             Polygon staircaseFoorprint = Polygon.Rectangle(stairCaseAxe.Start, max);
 
             var coreMatl = new Material("envelope", new Color(0.3, 0.7, 0.7, 0.6), 0.0f, 0.0f);
-            var serviceCores = new List<ServiceCore>();
+            var stairEnclosures = new List<StairEnclosure>();
             var stairs = new List<Stair>();
 
             var extrude = new Elements.Geometry.Solids.Extrude(staircaseFoorprint, levels.Last().Elevation, Vector3.ZAxis, false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>() { extrude });
-            serviceCores.Add(new ServiceCore(staircaseFoorprint, 0.0, levels.Last().Elevation, staircaseFoorprint.Centroid(),
+            stairEnclosures.Add(new StairEnclosure(staircaseFoorprint,Vector3.ZAxis, 0.0, 0.0, levels.Last().Elevation, staircaseFoorprint.Area(),"1",
                           new Transform(), coreMatl, geomRep, false, Guid.NewGuid(), ""));
 
-            // stairs.Add(new Stair())
+            Polyline stairPath = new Polyline(new List<Vector3> {
+                new Vector3(),
+                new Vector3(10,0,0)
+            });
+
+            StairMaker stairMaker = new StairMaker(maxRiser,thread,runWidth, stairPath ,3.5);
 
             var output = new StaircaseFromLineOutputs(2);
 
-            output.Model.AddElements(serviceCores);
+            output.Model.AddElements(stairEnclosures);
             return output;
         }
     }
