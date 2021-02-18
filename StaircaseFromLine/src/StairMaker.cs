@@ -13,6 +13,8 @@ namespace StaircaseFromLine
         public StairMaker(double maximumRiserHeight, double threadDepth, double runWidth, Polyline stairPath, double stairHeight)
         {
 
+            Stairs = new List<Stair>();
+
             // Calculate actual stair dimensions
             int riserNumber = Convert.ToInt32(Math.Ceiling(stairHeight / maximumRiserHeight));
             double actualRiserHeigh = stairHeight / riserNumber;
@@ -22,10 +24,8 @@ namespace StaircaseFromLine
             for (int i = 0; i < lenght; i++)
             {
                 Line flightLine = new Line(stairPath.Vertices[i], stairPath.Vertices[i + 1]);
-
+                StairFlightMaker(flightLine,threadDepth,actualRiserHeigh,runWidth);
             }
-
-
         }
 
         private void StairFlightMaker(Line flightLine, double threadDepth, double actualRiserHeigh, double runWidth)
@@ -46,11 +46,14 @@ namespace StaircaseFromLine
                 profileVertices.Add(profileVertices[i * 2] + riserVector + threadVector);
             }
 
+            profileVertices.Add(profileVertices.Last()+ Vector3.ZAxis * (-0.5));
+            profileVertices.Add(profileVertices[0]+ Vector3.XAxis * (0.5));
+
             Polygon profile = new Polygon(profileVertices);
 
-            var extrude1 = new Elements.Geometry.Solids.Extrude(profile, runWidth / 2, Vector3.YAxis, false);
-            var extrude2 = new Elements.Geometry.Solids.Extrude(profile, runWidth / 2, Vector3.YAxis, false);
-            var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>() { extrude1, extrude2 });
+            var extrude1 = new Elements.Geometry.Solids.Extrude(profile, runWidth, Vector3.YAxis, false);
+            // var extrude2 = new Elements.Geometry.Solids.Extrude(profile, runWidth / 2, Vector3.YAxis.Negate(), false);
+            var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>() { extrude1 });
             var coreMatl = new Material("envelope", new Color(0.3, 0.7, 0.7, 0.6), 0.0f, 0.0f);
 
             Stairs.Add(new Stair(0, actualRiserHeigh, actualRiserHeigh, 0, profile,

@@ -75,6 +75,7 @@ namespace StaircaseFromLine
             stairEnclosures.Add(new StairEnclosure(staircaseFoorprint,Vector3.ZAxis, 0.0, 0.0, levels.Last().Elevation, staircaseFoorprint.Area(),"1",
                           new Transform(), coreMatl, geomRep, false, Guid.NewGuid(), ""));
 
+
             Polyline stairPath = new Polyline(new List<Vector3> {
                 new Vector3(),
                 new Vector3(10,0,0)
@@ -85,6 +86,7 @@ namespace StaircaseFromLine
             var output = new StaircaseFromLineOutputs(2);
 
             output.Model.AddElements(stairEnclosures);
+            output.Model.AddElements(stairMaker.Stairs);
             return output;
         }
     }
