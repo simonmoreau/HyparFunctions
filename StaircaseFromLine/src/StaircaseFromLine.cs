@@ -68,12 +68,14 @@ namespace StaircaseFromLine
 
             var coreMatl = new Material("envelope", new Color(0.3, 0.7, 0.7, 0.6), 0.0f, 0.0f);
             var serviceCores = new List<ServiceCore>();
+            var stairs = new List<Stair>();
 
             var extrude = new Elements.Geometry.Solids.Extrude(staircaseFoorprint, levels.Last().Elevation, Vector3.ZAxis, false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>() { extrude });
             serviceCores.Add(new ServiceCore(staircaseFoorprint, 0.0, levels.Last().Elevation, staircaseFoorprint.Centroid(),
                           new Transform(), coreMatl, geomRep, false, Guid.NewGuid(), ""));
 
+            // stairs.Add(new Stair())
 
             var output = new StaircaseFromLineOutputs(2);
 

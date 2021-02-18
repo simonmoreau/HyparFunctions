@@ -1,0 +1,38 @@
+{
+    "x-namespace": "Elements",
+    "allOf": [
+        {
+            "$ref": "https://prod-api.hypar.io/schemas/GeometricElement"
+        }
+    ],
+    "required": [],
+    "properties": {
+        "StructuralDepth": {
+            "description": "Minimum depth between stait tread/riser and the underside of the stair run.",
+            "type": "number"
+        },
+        "RiserNumber": {
+            "description": "The number of riser is calculated based on the height between levels.",
+            "type": "number"
+        },
+        "RiserHeight": {
+            "description": "The riser height is calculated based on the number of riser and the Maximum Riser Height.",
+            "type": "number"
+        },
+        "MaximumRiserHeight": {
+            "description": "The height that risers will not exceed when the stair run is created.",
+            "type": "number"
+        },
+        "Height": {
+            "description": "The height of the run. ",
+            "type": "number"
+        }
+    },
+    "additionalProperties": false,
+    "description": "Represents a stair run.",
+    "$id": "StairRun",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "discriminator": "discriminator",
+    "type": "object",
+    "title": "Stair Run"
+}
