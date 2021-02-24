@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LevelsFromEnvelope
+namespace LevelsFromEnvelopes
 {
     public class LevelMaker
     {

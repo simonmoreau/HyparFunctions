@@ -12,43 +12,43 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
 
-namespace LevelsFromEnvelope
+namespace EnvelopeByPolyline
 {
-    public class LevelsFromEnvelopeOutputs: ResultsBase
+    public class EnvelopeByPolylineOutputs: ResultsBase
     {
 		/// <summary>
-		/// Total number of volume
+		/// The surface of façade
 		/// </summary>
-		[JsonProperty("Level Quantity")]
-		public double LevelQuantity {get;}
+		[JsonProperty("Façade Area")]
+		public double FaadeArea {get;}
 
 		/// <summary>
-		/// Total Level Area
+		/// The roof surface
 		/// </summary>
-		[JsonProperty("Total Level Area")]
-		public double TotalLevelArea {get;}
+		[JsonProperty("Roof Area")]
+		public double RoofArea {get;}
 
 
 
         /// <summary>
-        /// Construct a LevelsFromEnvelopeOutputs with default inputs.
+        /// Construct a EnvelopeByPolylineOutputs with default inputs.
         /// This should be used for testing only.
         /// </summary>
-        public LevelsFromEnvelopeOutputs() : base()
+        public EnvelopeByPolylineOutputs() : base()
         {
 
         }
 
 
         /// <summary>
-        /// Construct a LevelsFromEnvelopeOutputs specifying all inputs.
+        /// Construct a EnvelopeByPolylineOutputs specifying all inputs.
         /// </summary>
         /// <returns></returns>
         [JsonConstructor]
-        public LevelsFromEnvelopeOutputs(double levelQuantity, double totalLevelArea): base()
+        public EnvelopeByPolylineOutputs(double faadeArea, double roofArea): base()
         {
-			this.LevelQuantity = levelQuantity;
-			this.TotalLevelArea = totalLevelArea;
+			this.FaadeArea = faadeArea;
+			this.RoofArea = roofArea;
 
 		}
 

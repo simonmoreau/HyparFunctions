@@ -1,6 +1,6 @@
 
 
-# Envolope by Polyline
+# Envelope by Polyline
 
 Generate a volume of a given width 
 

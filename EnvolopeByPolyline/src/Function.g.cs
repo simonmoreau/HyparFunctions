@@ -8,40 +8,63 @@ using Hypar.Functions.Execution;
 using Hypar.Functions.Execution.AWS;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
-namespace EnvolopeByPolyline
+namespace EnvelopeByPolyline
 {
     public class Function
     {
         // Cache the model store for use by subsequent
         // executions of this lambda.
-        private IModelStore<EnvolopeByPolylineInputs> store;
+        private IModelStore<EnvelopeByPolylineInputs> store;
 
-        public async Task<EnvolopeByPolylineOutputs> Handler(EnvolopeByPolylineInputs args, ILambdaContext context)
+        public async Task<EnvelopeByPolylineOutputs> Handler(EnvelopeByPolylineInputs args, ILambdaContext context)
         {
+            // Preload dependencies (if they exist),
+            // so that they are available during model deserialization.
+
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            var asmLocation = this.GetType().Assembly.Location;
+            var asmDir = Path.GetDirectoryName(asmLocation);
+
+            // Explicitly load the dependencies project, it might have types
+            // that aren't used in the function but are necessary for correct 
+            // deserialization.
+            var asmName = Path.GetFileNameWithoutExtension(asmLocation);
+            var depPath = Path.Combine(asmDir, $"{asmName}.Dependencies.dll");
+            if(File.Exists(depPath))
+            {
+                Console.WriteLine($"Loading dependencies assembly from: {depPath}...");
+                Assembly.LoadFrom(depPath);
+                Console.WriteLine("Dependencies assembly loaded.");
+            }
+            
+            // Load all reference assemblies.
+            Console.WriteLine($"Loading all referenced assemblies.");
+            foreach (var asm in this.GetType().Assembly.GetReferencedAssemblies())
+            {
+                try 
+                {
+                    Assembly.Load(asm);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to load {asm.FullName}");
+                    Console.WriteLine(e.Message);
+                }
+            }
+            sw.Stop();
+            Console.WriteLine($"Time to load assemblies: {sw.Elapsed.TotalSeconds})");
+
             if(this.store == null)
             {
-                // Preload the dependencies (if they exist),
-                // so that they are available during model deserialization.
-                var asmLocation = this.GetType().Assembly.Location;
-                var asmDir = Path.GetDirectoryName(asmLocation);
-                var asmName = Path.GetFileNameWithoutExtension(asmLocation);
-                var depPath = Path.Combine(asmDir, $"{asmName}.Dependencies.dll");
-
-                if(File.Exists(depPath))
-                {
-                    Console.WriteLine($"Loading dependencies from assembly: {depPath}...");
-                    Assembly.LoadFrom(depPath);
-                    Console.WriteLine("Dependencies assembly loaded.");
-                }
-
-                this.store = new S3ModelStore<EnvolopeByPolylineInputs>(RegionEndpoint.USWest1);
+                this.store = new S3ModelStore<EnvelopeByPolylineInputs>(RegionEndpoint.USWest1);
             }
 
-            var l = new InvocationWrapper<EnvolopeByPolylineInputs,EnvolopeByPolylineOutputs>(store, EnvolopeByPolyline.Execute);
+            var l = new InvocationWrapper<EnvelopeByPolylineInputs,EnvelopeByPolylineOutputs>(store, EnvelopeByPolyline.Execute);
             var output = await l.InvokeAsync(args);
             return output;
         }

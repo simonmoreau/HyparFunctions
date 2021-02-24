@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 using System;
 using System.Collections.Generic;
 
-namespace EnvolopeByPolyline.Tests
+namespace EnvelopeByPolyline.Tests
 {
     public class FunctionTests
     {
