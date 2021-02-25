@@ -12,7 +12,7 @@ namespace StaircaseFromLine
     {
         public List<Stair> Stairs { get; private set; }
         private static string _texturePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Textures/Concrete_512.jpg");
-        public StairMaker(double maximumRiserHeight, double threadDepth, double runWidth, List<Line> stairPaths, List<Level> levels)
+        public StairMaker(double maximumRiserHeight, double threadDepth, double structuralDepth, double runWidth, List<Line> stairPaths, List<Level> levels)
         {
 
             Stairs = new List<Stair>();
@@ -30,7 +30,7 @@ namespace StaircaseFromLine
                 double elevation = levels[i].Elevation;
                 foreach (Line flightLine in stairPaths)
                 {
-                    elevation = elevation + StairFlightMaker(flightLine, threadDepth, actualRiserHeigh, runWidth, elevation);
+                    elevation = elevation + StairFlightMaker(flightLine, threadDepth, actualRiserHeigh, runWidth, elevation,structuralDepth);
                 }
             }
 
@@ -38,7 +38,7 @@ namespace StaircaseFromLine
 
         }
 
-        private double StairFlightMaker(Line flightLine, double threadDepth, double actualRiserHeigh, double runWidth, double elevation)
+        private double StairFlightMaker(Line flightLine, double threadDepth, double actualRiserHeigh, double runWidth, double elevation, double structuralDepth)
         {
             // Number of thread in the flight
             int threadNumber = Convert.ToInt32(Math.Ceiling(flightLine.Length() / threadDepth));
@@ -57,8 +57,9 @@ namespace StaircaseFromLine
                 profileVertices.Add(profileVertices[i * 2] + riserVector + threadVector);
             }
 
-            profileVertices.Add(profileVertices.Last() + Vector3.ZAxis * (-0.5));
-            profileVertices.Add(profileVertices[0] + Vector3.XAxis * (0.5));
+            
+            profileVertices.Add(CalculateEndStairUnderside(structuralDepth,riserVector,threadVector,profileVertices.Last()));
+            profileVertices.Add(CalculateStartStairUnderside(structuralDepth,riserVector,threadVector));
 
             Polygon profile = new Polygon(profileVertices);
 
@@ -74,6 +75,34 @@ namespace StaircaseFromLine
             transform, stairMaterial, geomRep, false, Guid.NewGuid(), ""));
 
             return flightHeight;
+        }
+
+        private Vector3 CalculateStartStairUnderside(double structuralDepth, Vector3 riserVector, Vector3 threadVector)
+        {
+            Line ae = new Line(new Vector3(),Vector3.XAxis,10);
+
+            Vector3 ac = riserVector + threadVector;
+            Vector3 cd = ac.Unitized().Negate().Cross(Vector3.YAxis)*structuralDepth;
+            Line de = new Line(ac+cd,ac.Negate(),10);
+
+            Vector3 e = new Vector3();
+            ae.Intersects(de,out e,true,true);
+
+            return e;
+        }
+        
+        private Vector3 CalculateEndStairUnderside(double structuralDepth, Vector3 riserVector, Vector3 threadVector, Vector3 lastPoint)
+        {
+            Line cd = new Line(lastPoint,Vector3.ZAxis.Negate(),10);
+
+            Vector3 ac = riserVector + threadVector;
+            Vector3 ae = ac.Unitized().Cross(Vector3.YAxis.Negate())*structuralDepth;
+            Line ed = new Line(lastPoint + ac.Negate() + ae,ac.Negate(),10);
+
+            Vector3 e = new Vector3();
+            cd.Intersects(ed,out e,true,true);
+
+            return e;
         }
     }
 }

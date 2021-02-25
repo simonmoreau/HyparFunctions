@@ -50,6 +50,7 @@ namespace StaircaseFromLine
             double thread = 0.3;
             double maxRiser = 0.14;
             double levelHeight = 3.5;
+            double structuralDepth = 0.175;
 
             if (uniteDePassage == 1) { runWidth = 0.9; }
             else if (uniteDePassage == 2) { runWidth = 1.4; }
@@ -89,7 +90,7 @@ namespace StaircaseFromLine
                 new Line(secondFlightPathStart,secondFlightPathStart + stairCaseAxe.Direction().Negate()* runLengh)
             };
 
-            StairMaker stairMaker = new StairMaker(maxRiser,thread,runWidth, stairPaths, levels);
+            StairMaker stairMaker = new StairMaker(maxRiser,thread,structuralDepth,runWidth, stairPaths, levels);
 
             var output = new StaircaseFromLineOutputs(2);
 
