@@ -2,14 +2,16 @@ using Elements;
 using Elements.Geometry;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace StaircaseFromLine
 {
     public class StairMaker
     {
         public List<Stair> Stairs { get; private set; }
-
+        private static string _texturePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Textures/Concrete_512.jpg");
         public StairMaker(double maximumRiserHeight, double threadDepth, double runWidth, List<Line> stairPaths, List<Level> levels)
         {
 
@@ -28,7 +30,6 @@ namespace StaircaseFromLine
                 double elevation = levels[i].Elevation;
                 foreach (Line flightLine in stairPaths)
                 {
-
                     elevation = elevation + StairFlightMaker(flightLine, threadDepth, actualRiserHeigh, runWidth, elevation);
                 }
             }
@@ -67,10 +68,10 @@ namespace StaircaseFromLine
             var extrude1 = new Elements.Geometry.Solids.Extrude(profile, runWidth, Vector3.YAxis, false);
             // var extrude2 = new Elements.Geometry.Solids.Extrude(profile, runWidth / 2, Vector3.YAxis.Negate(), false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>() { extrude1 });
-            var coreMatl = BuiltInMaterials.Concrete;
+            var stairMaterial = new Material("Concrete", Colors.White, 0.5, 0.1, _texturePath);
 
             Stairs.Add(new Stair(0, actualRiserHeigh, actualRiserHeigh, 0, profile,
-            transform, coreMatl, geomRep, false, Guid.NewGuid(), ""));
+            transform, stairMaterial, geomRep, false, Guid.NewGuid(), ""));
 
             return flightHeight;
         }
