@@ -55,30 +55,36 @@ namespace StaircaseFromLine
             else if (uniteDePassage == 2) { runWidth = 1.4; }
             else { runWidth = 0.6 * uniteDePassage; }
 
-
             double wallWidth = 0.2;
             double landingWidth = 2.5;
             double realLandingWidth = Math.Max(landingWidth, runWidth);
             double runLengh = Math.Ceiling(Math.Ceiling(levelHeight / maxRiser) / 2) * thread;
             double totalLenght = wallWidth * 2 + runWidth + realLandingWidth + runLengh;
-            double totalWidth = wallWidth * 2 + runWidth + wallWidth;
+            double totalWidth = wallWidth + runWidth + wallWidth + runWidth + wallWidth;
+            
+            Vector3 footprintWidth = Vector3.ZAxis.Cross(stairCaseAxe.Direction()).Negate() * totalWidth;
+            Vector3 footprintLenght = stairCaseAxe.Direction() * totalLenght;
+            Polygon staircaseFoorprint = new Polygon(new List<Vector3>{
+                stairCaseAxe.Start,
+                stairCaseAxe.Start + footprintLenght,
+                stairCaseAxe.Start + footprintLenght + footprintWidth,
+                stairCaseAxe.Start + footprintWidth,
+            });
 
-            Vector3 max = stairCaseAxe.Start + stairCaseAxe.Direction() * totalLenght + Vector3.ZAxis.Cross(stairCaseAxe.Direction()) * totalWidth;
-            Polygon staircaseFoorprint = Polygon.Rectangle(stairCaseAxe.Start, max);
-
-            var coreMatl = new Material("envelope", new Color(0.3, 0.7, 0.7, 0.6), 0.0f, 0.0f);
+            var envelopeMatl = new Material("envelope", new Color(0.3, 0.7, 0.7, 0.2), 0.0f, 0.0f);
             var stairEnclosures = new List<StairEnclosure>();
             var stairs = new List<Stair>();
 
             var extrude = new Elements.Geometry.Solids.Extrude(staircaseFoorprint, levels.Last().Elevation, Vector3.ZAxis, false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>() { extrude });
             stairEnclosures.Add(new StairEnclosure(staircaseFoorprint,Vector3.ZAxis, 0.0, 0.0, levels.Last().Elevation, staircaseFoorprint.Area(),"1",
-                          new Transform(), coreMatl, geomRep, false, Guid.NewGuid(), ""));
+                          new Transform(), envelopeMatl, geomRep, false, Guid.NewGuid(), ""));
 
-
+            
+            Vector3 stairPathStart = stairCaseAxe.Start + Vector3.ZAxis.Cross(stairCaseAxe.Direction()).Negate() * (wallWidth + runWidth /2 );
             Polyline stairPath = new Polyline(new List<Vector3> {
-                new Vector3(),
-                new Vector3(10,0,0)
+                stairPathStart,
+                stairPathStart + stairCaseAxe.Direction()* runLengh
             });
 
             StairMaker stairMaker = new StairMaker(maxRiser,thread,runWidth, stairPath ,3.5);

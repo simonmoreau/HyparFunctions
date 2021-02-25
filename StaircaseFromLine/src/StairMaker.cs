@@ -51,13 +51,16 @@ namespace StaircaseFromLine
 
             Polygon profile = new Polygon(profileVertices);
 
+            Vector3 flightStartingPoint = flightLine.Start + Vector3.ZAxis.Cross(flightLine.Direction()).Negate() * runWidth / 2;
+            Transform transform = new Transform( flightStartingPoint ,flightLine.Direction(),Vector3.ZAxis);
+
             var extrude1 = new Elements.Geometry.Solids.Extrude(profile, runWidth, Vector3.YAxis, false);
             // var extrude2 = new Elements.Geometry.Solids.Extrude(profile, runWidth / 2, Vector3.YAxis.Negate(), false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>() { extrude1 });
-            var coreMatl = new Material("envelope", new Color(0.3, 0.7, 0.7, 0.6), 0.0f, 0.0f);
+            var coreMatl = BuiltInMaterials.Concrete;
 
             Stairs.Add(new Stair(0, actualRiserHeigh, actualRiserHeigh, 0, profile,
-            new Transform(), coreMatl, geomRep, false, Guid.NewGuid(), ""));
+            transform, coreMatl, geomRep, false, Guid.NewGuid(), ""));
         }
     }
 }
