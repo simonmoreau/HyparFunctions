@@ -62,7 +62,8 @@ namespace StaircaseFromLine
             double totalLenght = wallWidth * 2 + runWidth + realLandingWidth + runLengh;
             double totalWidth = wallWidth + runWidth + wallWidth + runWidth + wallWidth;
             
-            Vector3 footprintWidth = Vector3.ZAxis.Cross(stairCaseAxe.Direction()).Negate() * totalWidth;
+            Vector3 widthDirection = Vector3.ZAxis.Cross(stairCaseAxe.Direction()).Negate();
+            Vector3 footprintWidth = widthDirection * totalWidth;
             Vector3 footprintLenght = stairCaseAxe.Direction() * totalLenght;
             Polygon staircaseFoorprint = new Polygon(new List<Vector3>{
                 stairCaseAxe.Start,
@@ -81,13 +82,14 @@ namespace StaircaseFromLine
                           new Transform(), envelopeMatl, geomRep, false, Guid.NewGuid(), ""));
 
             
-            Vector3 stairPathStart = stairCaseAxe.Start + Vector3.ZAxis.Cross(stairCaseAxe.Direction()).Negate() * (wallWidth + runWidth /2 );
-            Polyline stairPath = new Polyline(new List<Vector3> {
-                stairPathStart,
-                stairPathStart + stairCaseAxe.Direction()* runLengh
-            });
+            Vector3 stairPathStart = stairCaseAxe.Start + widthDirection * (wallWidth + runWidth /2 );
+            Vector3 secondFlightPathStart = stairPathStart + stairCaseAxe.Direction()* runLengh + widthDirection*(runWidth+wallWidth);
+            List<Line> stairPaths = new List<Line>{
+                new Line(stairPathStart,stairPathStart + stairCaseAxe.Direction()* runLengh),
+                new Line(secondFlightPathStart,secondFlightPathStart + stairCaseAxe.Direction().Negate()* runLengh)
+            };
 
-            StairMaker stairMaker = new StairMaker(maxRiser,thread,runWidth, stairPath ,3.5);
+            StairMaker stairMaker = new StairMaker(maxRiser,thread,runWidth, stairPaths, levels);
 
             var output = new StaircaseFromLineOutputs(2);
 
