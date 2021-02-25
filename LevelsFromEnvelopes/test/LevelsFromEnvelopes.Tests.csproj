@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\LevelsFromEnvelope.csproj" />
+    <ProjectReference Include="..\src\LevelsFromEnvelopes.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace LevelsFromEnvelopes
 {
-      public static class LevelsFromEnvelopes
+    public static class LevelsFromEnvelopes
     {
         /// <summary>
         /// Create levels in every envelopes in the project.
@@ -46,5 +46,5 @@ namespace LevelsFromEnvelopes
 
             return output;
         }
-      }
+    }
 }
