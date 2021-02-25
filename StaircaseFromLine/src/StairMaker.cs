@@ -28,9 +28,23 @@ namespace StaircaseFromLine
                 // Create a flight of step for every line in the path
 
                 double elevation = levels[i].Elevation;
+                double cumulatedStairHeight = 0;
                 foreach (Line flightLine in stairPaths)
                 {
-                    elevation = elevation + StairFlightMaker(flightLine, threadDepth, actualRiserHeigh, runWidth, elevation,structuralDepth);
+                    // Number of thread in the flight
+                    int threadNumber = Convert.ToInt32(Math.Ceiling(flightLine.Length() / threadDepth));
+                    double flightHeight = threadNumber * actualRiserHeigh;
+
+                    if (flightHeight + cumulatedStairHeight > stairHeight)
+                    {
+                        flightHeight = stairHeight - cumulatedStairHeight;
+                        threadNumber = Convert.ToInt32(flightHeight / actualRiserHeigh);
+                    }
+
+                    StairFlightMaker(flightLine,threadNumber, threadDepth, actualRiserHeigh, runWidth, elevation, structuralDepth);
+
+                    cumulatedStairHeight = cumulatedStairHeight + flightHeight;
+                    elevation = elevation + flightHeight;
                 }
             }
 
@@ -38,11 +52,8 @@ namespace StaircaseFromLine
 
         }
 
-        private double StairFlightMaker(Line flightLine, double threadDepth, double actualRiserHeigh, double runWidth, double elevation, double structuralDepth)
+        private void StairFlightMaker(Line flightLine, int threadNumber, double threadDepth, double actualRiserHeigh, double runWidth, double elevation, double structuralDepth)
         {
-            // Number of thread in the flight
-            int threadNumber = Convert.ToInt32(Math.Ceiling(flightLine.Length() / threadDepth));
-            double flightHeight = threadNumber * actualRiserHeigh;
             List<Vector3> profileVertices = new List<Vector3>();
 
             Vector3 riserVector = Vector3.ZAxis * actualRiserHeigh;
@@ -57,9 +68,9 @@ namespace StaircaseFromLine
                 profileVertices.Add(profileVertices[i * 2] + riserVector + threadVector);
             }
 
-            
-            profileVertices.Add(CalculateEndStairUnderside(structuralDepth,riserVector,threadVector,profileVertices.Last()));
-            profileVertices.Add(CalculateStartStairUnderside(structuralDepth,riserVector,threadVector));
+
+            profileVertices.Add(CalculateEndStairUnderside(structuralDepth, riserVector, threadVector, profileVertices.Last()));
+            profileVertices.Add(CalculateStartStairUnderside(structuralDepth, riserVector, threadVector));
 
             Polygon profile = new Polygon(profileVertices);
 
@@ -73,34 +84,32 @@ namespace StaircaseFromLine
 
             Stairs.Add(new Stair(0, actualRiserHeigh, actualRiserHeigh, 0, profile,
             transform, stairMaterial, geomRep, false, Guid.NewGuid(), ""));
-
-            return flightHeight;
         }
 
         private Vector3 CalculateStartStairUnderside(double structuralDepth, Vector3 riserVector, Vector3 threadVector)
         {
-            Line ae = new Line(new Vector3(),Vector3.XAxis,10);
+            Line ae = new Line(new Vector3(), Vector3.XAxis, 10);
 
             Vector3 ac = riserVector + threadVector;
-            Vector3 cd = ac.Unitized().Negate().Cross(Vector3.YAxis)*structuralDepth;
-            Line de = new Line(ac+cd,ac.Negate(),10);
+            Vector3 cd = ac.Unitized().Negate().Cross(Vector3.YAxis) * structuralDepth;
+            Line de = new Line(ac + cd, ac.Negate(), 10);
 
             Vector3 e = new Vector3();
-            ae.Intersects(de,out e,true,true);
+            ae.Intersects(de, out e, true, true);
 
             return e;
         }
-        
+
         private Vector3 CalculateEndStairUnderside(double structuralDepth, Vector3 riserVector, Vector3 threadVector, Vector3 lastPoint)
         {
-            Line cd = new Line(lastPoint,Vector3.ZAxis.Negate(),10);
+            Line cd = new Line(lastPoint, Vector3.ZAxis.Negate(), 10);
 
             Vector3 ac = riserVector + threadVector;
-            Vector3 ae = ac.Unitized().Cross(Vector3.YAxis.Negate())*structuralDepth;
-            Line ed = new Line(lastPoint + ac.Negate() + ae,ac.Negate(),10);
+            Vector3 ae = ac.Unitized().Cross(Vector3.YAxis.Negate()) * structuralDepth;
+            Line ed = new Line(lastPoint + ac.Negate() + ae, ac.Negate(), 10);
 
             Vector3 e = new Vector3();
-            cd.Intersects(ed,out e,true,true);
+            cd.Intersects(ed, out e, true, true);
 
             return e;
         }
